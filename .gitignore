@@ -1,0 +1,14 @@
+# GoLand
+.idea/
+*.iml
+
+# Protobuf
+*.pb.go
+
+# Executable
+CSGY6903-Project2
+
+# TLS
+certificate.pem
+certificate.p12
+key.pem
