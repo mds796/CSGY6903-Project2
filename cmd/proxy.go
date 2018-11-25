@@ -32,8 +32,8 @@ func setStartArgs(command *cobra.Command) {
 	command.Flags().StringVarP(&config.CertificatePath, "certificatePath", "C", "./certificate.pem", "The file path to the public certificate for TLS.")
 	command.Flags().StringVarP(&config.KeyPath, "keyPath", "K", "./key.pem", "The file path to the secret key for the TLS certificate.")
 
-	command.Flags().StringVarP(&config.UploadApi, "upload", "U", "/!/dl/", "The URL path to upload a file to the destination server.")
-	command.Flags().StringVarP(&config.DownloadApi, "download", "D", "/!/dl/", "The URL path to download a file from the destination server.")
+	command.Flags().StringVarP(&config.UploadApi, "upload", "U", "/!/upload", "The URL path to upload a file to the destination server.")
+	command.Flags().StringVarP(&config.DownloadApi, "download", "D", "/!/dl", "The URL path to download a file from the destination server.")
 }
 
 var proxyCmd = &cobra.Command{

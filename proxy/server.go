@@ -8,7 +8,11 @@ import (
 type HttpServerProxy struct {
 	Multiplexer *http.ServeMux
 	Server      *http.Server
-	Backend     Backend
+
+	Backend Backend
+
+	UploadApi   string
+	DownloadApi string
 }
 
 func (p *HttpServerProxy) Start() error {
@@ -17,9 +21,9 @@ func (p *HttpServerProxy) Start() error {
 }
 
 func (p *HttpServerProxy) configureRoutes() {
+	p.Multiplexer.HandleFunc(p.UploadApi, p.Backend.Upload)
+	p.Multiplexer.HandleFunc(p.DownloadApi, p.Backend.Download)
 	p.Multiplexer.HandleFunc("/", p.Backend.Proxy)
-	p.Multiplexer.HandleFunc("/upload", p.Backend.Upload)
-	p.Multiplexer.HandleFunc("/download", p.Backend.Download)
 }
 
 func (p *HttpServerProxy) listenAndServe() error {
@@ -36,5 +40,10 @@ func NewProxy(config *Config) Proxy {
 	mux := http.NewServeMux()
 	server := &http.Server{Addr: config.Target(), Handler: mux}
 
-	return &HttpServerProxy{Server: server, Multiplexer: mux, Backend: NewBackend(config)}
+	return &HttpServerProxy{
+		Server:      server,
+		Multiplexer: mux,
+		Backend:     NewBackend(config),
+		UploadApi:   config.UploadApi,
+		DownloadApi: config.DownloadApi}
 }

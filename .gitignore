@@ -5,10 +5,11 @@
 # Protobuf
 *.pb.go
 
-# Executable
+# Go
 CSGY6903-Project2
 profile.prof
 .proxy.pid
+go.sum
 
 # TLS
 certificate.pem
