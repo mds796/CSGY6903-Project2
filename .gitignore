@@ -12,9 +12,8 @@ profile.prof
 go.sum
 
 # TLS
-certificate.pem
-certificate.p12
-key.pem
+server.crt
+server.key
 
 # NPM
 package-lock.json

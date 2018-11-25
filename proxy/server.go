@@ -11,6 +11,9 @@ type HttpServerProxy struct {
 
 	Backend Backend
 
+	CertificatePath string
+	KeyPath         string
+
 	UploadApi    string
 	DownloadApi  string
 	WebSocketApi string
@@ -31,7 +34,7 @@ func (p *HttpServerProxy) configureRoutes() {
 func (p *HttpServerProxy) listenAndServe() error {
 	log.Printf("Proxy server now listening on %v.\n", p.Server.Addr)
 
-	return p.Server.ListenAndServe()
+	return p.Server.ListenAndServeTLS(p.CertificatePath, p.KeyPath)
 }
 
 func (p *HttpServerProxy) Stop() error {
@@ -43,10 +46,12 @@ func NewProxy(config *Config) Proxy {
 	server := &http.Server{Addr: config.Target(), Handler: mux}
 
 	return &HttpServerProxy{
-		Server:       server,
-		Multiplexer:  mux,
-		Backend:      NewBackend(config),
-		UploadApi:    config.UploadApi,
-		DownloadApi:  config.DownloadApi,
-		WebSocketApi: config.WebSocketApi}
+		Server:          server,
+		Multiplexer:     mux,
+		Backend:         NewBackend(config),
+		CertificatePath: config.CertificatePath,
+		KeyPath:         config.KeyPath,
+		UploadApi:       config.UploadApi,
+		DownloadApi:     config.DownloadApi,
+		WebSocketApi:    config.WebSocketApi}
 }
