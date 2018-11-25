@@ -18,8 +18,9 @@ type Config struct {
 	DownloadApi  string
 	WebSocketApi string
 
-	CertificatePath string
-	KeyPath         string
+	CertificatePath  string
+	KeyPath          string
+	SymmetricKeyPath string
 }
 
 func (c *Config) Target() string {

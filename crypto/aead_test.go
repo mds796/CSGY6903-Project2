@@ -6,7 +6,7 @@ import (
 )
 
 func TestAuthenticatedEncryptionCipher_Encrypt(t *testing.T) {
-	c := NewSymmetric("test")
+	c := NewSymmetric(NewPassPhraseKey("test"))
 	cipherText, err := c.Encrypt([]byte("Hello, World!"))
 	if err != nil {
 		t.Error(err)
@@ -30,7 +30,7 @@ func TestAuthenticatedEncryptionCipher_Encrypt(t *testing.T) {
 func TestAuthenticatedEncryptionCipher_Decrypt(t *testing.T) {
 	expected := "Hello, World!"
 
-	c := NewSymmetric("test")
+	c := NewSymmetric(NewPassPhraseKey("test"))
 	cipherText, err := c.Encrypt([]byte(expected))
 	if err != nil {
 		t.Error(err)
@@ -52,7 +52,7 @@ func TestAuthenticatedEncryptionCipher_Decrypt(t *testing.T) {
 func TestAuthenticatedEncryptionCipher_DecryptEdited(t *testing.T) {
 	expected := "Hello, World!"
 
-	c := NewSymmetric("test")
+	c := NewSymmetric(NewPassPhraseKey("test"))
 	cipherText, err := c.Encrypt([]byte(expected))
 	if err != nil {
 		t.Error(err)
@@ -72,14 +72,14 @@ func TestAuthenticatedEncryptionCipher_DecryptEdited(t *testing.T) {
 func TestAuthenticatedEncryptionCipher_DecryptDifferentPassPhrase(t *testing.T) {
 	expected := "Hello, World!"
 
-	c := NewSymmetric("test")
+	c := NewSymmetric(NewPassPhraseKey("test"))
 	cipherText, err := c.Encrypt([]byte(expected))
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	c2 := NewSymmetric("test2")
+	c2 := NewSymmetric(NewPassPhraseKey("test2"))
 	_, err = c2.Decrypt(cipherText)
 	if err == nil {
 		t.Error("Expected error due to authentication failure.")

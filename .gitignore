@@ -14,6 +14,7 @@ go.sum
 # TLS
 server.crt
 server.key
+symmetric.key
 
 # NPM
 package-lock.json

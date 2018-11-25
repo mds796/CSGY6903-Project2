@@ -9,11 +9,11 @@ import (
 )
 
 type AuthenticatedEncryptionCipher struct {
-	PassPhrase string
+	Key []byte
 }
 
 func (c *AuthenticatedEncryptionCipher) createCipher() (cipher.AEAD, error) {
-	block, err := aes.NewCipher(createHash(c.PassPhrase))
+	block, err := aes.NewCipher(c.Key)
 	if err != nil {
 		return nil, err
 	}
@@ -52,13 +52,13 @@ func (c *AuthenticatedEncryptionCipher) Decrypt(data []byte) ([]byte, error) {
 	return plaintext, nil
 }
 
-func createHash(key string) []byte {
+func NewPassPhraseKey(key string) []byte {
 	hash := sha256.New()
 	hash.Write([]byte(key))
 
 	return hash.Sum(nil)
 }
 
-func NewSymmetric(passPhrase string) SymmetricCipher {
-	return &AuthenticatedEncryptionCipher{PassPhrase: passPhrase}
+func NewSymmetric(key []byte) SymmetricCipher {
+	return &AuthenticatedEncryptionCipher{Key: key}
 }

@@ -6,9 +6,10 @@ import (
 	"net"
 	"net/http"
 	"net/http/httputil"
+	"net/url"
 )
 
-func (s *HttpServer) WebSocket(w http.ResponseWriter, r *http.Request) {
+func hijack(destinationTarget *url.URL, w http.ResponseWriter, r *http.Request) {
 	h, ok := w.(http.Hijacker)
 	if !ok {
 		log.Println("Failed to hijack HTTP connection. Response does not implement http.Hijacker.")
@@ -35,7 +36,7 @@ func (s *HttpServer) WebSocket(w http.ResponseWriter, r *http.Request) {
 
 	failed := make(chan bool, 2)
 
-	destination, err := s.forward(client, failed)
+	destination, err := forward(destinationTarget, client, failed)
 	if err != nil {
 		log.Printf("Encountered an eror while forwarding Web Socket connection. %v", err)
 		return
@@ -52,8 +53,8 @@ func (s *HttpServer) WebSocket(w http.ResponseWriter, r *http.Request) {
 	<-failed
 }
 
-func (s *HttpServer) forward(conn net.Conn, failed chan bool) (net.Conn, error) {
-	destination, err := net.Dial("tcp", s.DestinationTarget.Host)
+func forward(destinationTarget *url.URL, conn net.Conn, failed chan bool) (net.Conn, error) {
+	destination, err := net.Dial("tcp", destinationTarget.Host)
 
 	if err != nil {
 		log.Printf("Failed to dial to destination server. %v", err)

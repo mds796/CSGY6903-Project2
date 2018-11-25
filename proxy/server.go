@@ -25,10 +25,10 @@ func (p *HttpServerProxy) Start() error {
 }
 
 func (p *HttpServerProxy) configureRoutes() {
-	p.Multiplexer.HandleFunc(p.UploadApi, p.Backend.Upload)
-	p.Multiplexer.HandleFunc(p.DownloadApi, p.Backend.Download)
+	p.Multiplexer.Handle(p.UploadApi, p.Backend.Upload())
+	p.Multiplexer.Handle(p.DownloadApi, p.Backend.Download())
 	p.Multiplexer.HandleFunc(p.WebSocketApi, p.Backend.WebSocket)
-	p.Multiplexer.HandleFunc("/", p.Backend.Proxy)
+	p.Multiplexer.Handle("/", p.Backend.Proxy())
 }
 
 func (p *HttpServerProxy) listenAndServe() error {
