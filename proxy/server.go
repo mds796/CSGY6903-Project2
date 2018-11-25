@@ -11,8 +11,9 @@ type HttpServerProxy struct {
 
 	Backend Backend
 
-	UploadApi   string
-	DownloadApi string
+	UploadApi    string
+	DownloadApi  string
+	WebSocketApi string
 }
 
 func (p *HttpServerProxy) Start() error {
@@ -23,6 +24,7 @@ func (p *HttpServerProxy) Start() error {
 func (p *HttpServerProxy) configureRoutes() {
 	p.Multiplexer.HandleFunc(p.UploadApi, p.Backend.Upload)
 	p.Multiplexer.HandleFunc(p.DownloadApi, p.Backend.Download)
+	p.Multiplexer.HandleFunc(p.WebSocketApi, p.Backend.WebSocket)
 	p.Multiplexer.HandleFunc("/", p.Backend.Proxy)
 }
 
@@ -41,9 +43,10 @@ func NewProxy(config *Config) Proxy {
 	server := &http.Server{Addr: config.Target(), Handler: mux}
 
 	return &HttpServerProxy{
-		Server:      server,
-		Multiplexer: mux,
-		Backend:     NewBackend(config),
-		UploadApi:   config.UploadApi,
-		DownloadApi: config.DownloadApi}
+		Server:       server,
+		Multiplexer:  mux,
+		Backend:      NewBackend(config),
+		UploadApi:    config.UploadApi,
+		DownloadApi:  config.DownloadApi,
+		WebSocketApi: config.WebSocketApi}
 }

@@ -14,8 +14,9 @@ type Config struct {
 	DestinationHost   string
 	DestinationPort   uint16
 
-	UploadApi   string
-	DownloadApi string
+	UploadApi    string
+	DownloadApi  string
+	WebSocketApi string
 
 	CertificatePath string
 	KeyPath         string

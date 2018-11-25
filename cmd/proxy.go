@@ -34,6 +34,7 @@ func setStartArgs(command *cobra.Command) {
 
 	command.Flags().StringVarP(&config.UploadApi, "upload", "U", "/!/upload", "The URL path to upload a file to the destination server.")
 	command.Flags().StringVarP(&config.DownloadApi, "download", "D", "/!/dl", "The URL path to download a file from the destination server.")
+	command.Flags().StringVarP(&config.WebSocketApi, "websocket", "W", "/!/socket", "The URL path to start a Web Socket with the destination server.")
 }
 
 var proxyCmd = &cobra.Command{
