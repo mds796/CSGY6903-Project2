@@ -1,7 +1,6 @@
 package proxy
 
 import (
-	"github.com/gorilla/websocket"
 	"io"
 	"log"
 	"net"
@@ -14,7 +13,6 @@ type HttpServer struct {
 	Destination *http.Client
 
 	ReverseProxy *httputil.ReverseProxy
-	Upgrader     websocket.Upgrader
 
 	DestinationTarget *url.URL
 	UploadApi         *url.URL
@@ -120,6 +118,5 @@ func NewBackend(config *Config) Backend {
 		DestinationTarget: config.DestinationTarget(),
 		UploadApi:         upload,
 		DownloadApi:       download,
-		ReverseProxy:      httputil.NewSingleHostReverseProxy(config.DestinationTarget()),
-		Upgrader:          websocket.Upgrader{}}
+		ReverseProxy:      httputil.NewSingleHostReverseProxy(config.DestinationTarget())}
 }
