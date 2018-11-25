@@ -1,0 +1,15 @@
+{
+  "name": "csgy6903-project2",
+  "version": "1.0.0",
+  "description": "A secure file server proxy that securely stores and retrieves files on an insecure file server.",
+  "scripts": {
+    "start": "npm explore droppy -- npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mds796/CSGY6903-Project2.git"
+  },
+  "dependencies": {
+    "droppy": "^10.0.7"
+  }
+}

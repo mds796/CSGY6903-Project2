@@ -7,8 +7,13 @@
 
 # Executable
 CSGY6903-Project2
+profile.prof
+.proxy.pid
 
 # TLS
 certificate.pem
 certificate.p12
 key.pem
+
+# NPM
+package-lock.json

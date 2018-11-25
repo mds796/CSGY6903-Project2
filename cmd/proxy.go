@@ -1,17 +1,18 @@
 package cmd
 
 import (
-	"github.com/mds796/CSGY9223-Final/web"
+	"github.com/mds796/CSGY6903-Project2/proxy"
 	"github.com/spf13/cobra"
+	"log"
 )
 
-var config web.Config
+var config proxy.Config
 var pidFile string
 
 func init() {
 	rootCmd.AddCommand(proxyCmd)
 
-	proxyCmd.PersistentFlags().StringVarP(&pidFile, "pidFile", "p", ".web.pid", "The name of the process ID file.")
+	proxyCmd.PersistentFlags().StringVarP(&pidFile, "pidFile", "p", ".proxy.pid", "The name of the process ID file.")
 	proxyCmd.AddCommand(startCmd)
 	proxyCmd.AddCommand(stopCmd)
 	proxyCmd.AddCommand(restartCmd)
@@ -24,11 +25,15 @@ func setStartArgs(command *cobra.Command) {
 	command.Flags().StringVarP(&config.Host, "host", "H", "localhost", "The host interface to listen on.")
 	command.Flags().Uint16VarP(&config.Port, "port", "P", 9898, "The TCP port to listen on.")
 
-	command.Flags().StringVar(&config.UserHost, "destinationHost", "localhost", "The hostname destination file server listens on.")
-	command.Flags().Uint16Var(&config.UserPort, "destinationPort", 8989, "The TCP port destination file server listens on.")
+	command.Flags().StringVar(&config.DestinationScheme, "destinationScheme", "http", "The protocol scheme destination file server listens on.")
+	command.Flags().StringVar(&config.DestinationHost, "destinationHost", "localhost", "The hostname destination file server listens on.")
+	command.Flags().Uint16Var(&config.DestinationPort, "destinationPort", 8989, "The TCP port destination file server listens on.")
 
-	command.Flags().StringVarP(&config.StaticPath, "certificatePath", "C", "./certificate.pem", "The file path to the public certificate for TLS.")
-	command.Flags().StringVarP(&config.StaticPath, "keyPath", "K", "./key.pem", "The file path to the secret key for the TLS certificate.")
+	command.Flags().StringVarP(&config.CertificatePath, "certificatePath", "C", "./certificate.pem", "The file path to the public certificate for TLS.")
+	command.Flags().StringVarP(&config.KeyPath, "keyPath", "K", "./key.pem", "The file path to the secret key for the TLS certificate.")
+
+	command.Flags().StringVarP(&config.UploadApi, "upload", "U", "/!/dl/", "The URL path to upload a file to the destination server.")
+	command.Flags().StringVarP(&config.DownloadApi, "download", "D", "/!/dl/", "The URL path to download a file from the destination server.")
 }
 
 var proxyCmd = &cobra.Command{
@@ -45,7 +50,10 @@ var startCmd = &cobra.Command{
 	Long:  `Starts the proxy server.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		writePidFile(pidFile)
-		web.New(&config).Start()
+
+		if err := proxy.NewProxy(&config).Start(); err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
